@@ -1,0 +1,34 @@
+version: "3"
+services:
+  agent1:
+    image: bcgovimages/aries-cloudagent:py36-1.16-1_0.7.1
+    container_name: genting
+    environment:
+      - ACAPY_LABEL=GENTING
+      - ACAPY_ENDPOINT=http://genting:8844
+      - ACAPY_OUTBOUND_TRANSPORT=http
+      - ACAPY_ADMIN=[0.0.0.0, 8051]
+      - ACAPY_WALLET_TYPE=indy
+      - ACAPY_WALLET_NAME=genting
+      - ACAPY_WALLET_SEED=genting0000000000000000000000000 #from registered DID on von-network
+      - ACAPY_WALLET_KEY=Ax66tyj1Pj2nEV8Z2Dw6utugtF6yXq353Q7ZU7JAqG6t #from registered DID on von-network
+      - ACAPY_GENESIS_URL=http://von_webserver_1:8000/genesis
+      - ACAPY_AGENT_LABEL=GENTING.AGENT
+      - ACAPY_WEBHOOK_URL=http://main:5000/webhooks 
+      - ACAPY_TRACE_TARGET=log
+      - ACAPT_TRACE_TAG=acapy.events
+      - ACAPY_TRACE_LABEL=genting.agent.trace
+      - ACAPY_TAILS_SERVER_UPLOAD_URL=http://docker_tails-server_1:6543
+    ports:
+      - 8051:8051
+      - 8844:8844
+    entrypoint: aca-py
+    #running agent as wallet (genting)
+    #inbound transport is localhost and should not be used by anyone
+    command: start --inbound-transport http genting 8844 --auto-ping-connection --auto-respond-messages --preserve-exchange-records --auto-provision --emit-new-didcomm-prefix --replace-public-did --admin-insecure-mode --replace-public-did --recreate-wallet
+networks:
+  default:
+    external: true
+    name: von_von
+
+    

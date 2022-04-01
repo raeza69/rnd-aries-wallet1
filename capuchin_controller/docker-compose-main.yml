@@ -1,0 +1,15 @@
+version: '3'
+# init main app image
+services:
+  main1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: capuchin:latest
+    container_name: capuchin_controller
+    ports:
+      - "5000:5000"
+networks:
+  default:
+    external: true
+    name: von_von
